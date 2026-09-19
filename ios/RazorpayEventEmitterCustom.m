@@ -220,10 +220,20 @@ RCT_EXPORT_MODULE();
 }
 
 + (void)upiApps:(NSArray *)upiApps {
+    // getAppsWhichSupportUpiWithHandler: hands back NSArray<NSDictionary *> *
+    // (each entry already has appName/packageName/icon fields) — not
+    // NSArray<NSString *>. Treating entries as plain strings and wrapping
+    // them as @{@"appName": app} nested the whole per-app dict one level
+    // too deep and dropped packageName/icon fields entirely on the JS side.
     NSMutableArray *apps = [[NSMutableArray alloc] init];
-    for (NSString *app in upiApps) {
-        NSDictionary *dataDict = @{ @"appName" : app};
-        [apps addObject:dataDict];
+    for (id app in upiApps) {
+        if ([app isKindOfClass:[NSDictionary class]]) {
+            [apps addObject:app];
+        } else if ([app isKindOfClass:[NSString class]]) {
+            // Back-compat with the deprecated getSupportedUPIApps, which
+            // really did return plain app-name strings.
+            [apps addObject:@{ @"appName" : app }];
+        }
     }
     NSDictionary *payload = @{ @"data" : apps};
     [[NSNotificationCenter defaultCenter] postNotificationName:kUpiApps

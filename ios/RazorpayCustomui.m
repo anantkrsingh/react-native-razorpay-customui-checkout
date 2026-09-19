@@ -84,7 +84,9 @@ RCT_EXPORT_METHOD(getRecommendedInstruments:(NSDictionary *)options){
 
 RCT_EXPORT_METHOD(getWalletLogoUrl:(NSString *)walletName){
     NSURL *url = [razorpay getWalletLogoWithHavingWalletName:walletName];
-    NSDictionary *dict = @{@"data":url.absoluteString};
+    // getWalletLogoWithHavingWalletName: is declared nullable — building
+    // @{} with a nil value throws NSInvalidArgumentException and crashes.
+    NSDictionary *dict = url ? @{@"data":url.absoluteString} : @{@"error":@"Wallet logo not found"};
 
     [RazorpayEventEmitterCustom walletLogoUrl:dict];
 }
@@ -116,13 +118,15 @@ RCT_EXPORT_METHOD(isValidVpa:(NSString *)vpaAddress){
 
 RCT_EXPORT_METHOD(getBankLogoUrl:(NSString *)bankName){
     NSURL *url = [razorpay getBankLogoWithHavingBankCode:bankName];
-    NSDictionary *dict = @{@"data":url.absoluteString};
+    // getBankLogoWithHavingBankCode: is declared nullable — same nil-crash guard as above.
+    NSDictionary *dict = url ? @{@"data":url.absoluteString} : @{@"error":@"Bank logo not found"};
     [RazorpayEventEmitterCustom bankLogoUrl:dict];
 }
 
 RCT_EXPORT_METHOD(getSqWalletLogoUrl:(NSString *)walletName){
     NSURL *url = [razorpay getWalletSqLogoWithHavingWalletName:walletName];
-    NSDictionary *dict = @{@"data":url.absoluteString};
+    // getWalletSqLogoWithHavingWalletName: is declared nullable — same nil-crash guard as above.
+    NSDictionary *dict = url ? @{@"data":url.absoluteString} : @{@"error":@"Wallet logo not found"};
     [RazorpayEventEmitterCustom sqWalletLogoUrl:dict];
 }
 
