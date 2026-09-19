@@ -9,6 +9,8 @@
     "ios",
     "index.js",
     "index.d.ts",
+    "cardNetwork.js",
+    "cardNetwork.d.ts",
     "react-native-razorpay-customui-checkout.podspec",
     "LICENSE",
     "README.md"

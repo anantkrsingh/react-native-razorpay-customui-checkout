@@ -1,6 +1,20 @@
 'use strict';
 
 import {NativeModules, NativeEventEmitter, Platform} from 'react-native';
+import {
+  detectCardNetwork,
+  getCardNetworkLength as cardNetworkMaxLength,
+  isValidCardNumber as validateCardNumber,
+} from './cardNetwork';
+
+export {
+  detectCardNetwork,
+  isValidCardNumber as isCardNumberValid,
+  getCardNetworkLength,
+  isValidCardCvv,
+  passesLuhnCheck,
+  CARD_NETWORK_LENGTHS,
+} from './cardNetwork';
 
 const razorpayEvents = new NativeEventEmitter(NativeModules.RazorpayEventEmitterCustom);
 
@@ -11,12 +25,9 @@ const removeSubscriptions = () => {
   razorpayEvents.removeAllListeners('Razorpay::UPI_APPS');
   razorpayEvents.removeAllListeners('Razorpay::PAYMENT_METHODS');
   razorpayEvents.removeAllListeners('Razorpay::PAYMENT_METHODS_ERROR');
-  razorpayEvents.removeAllListeners('Razorpay::CARD_NETWORK');
   razorpayEvents.removeAllListeners('Razorpay::CRED_APP_AVAILABLE');
   razorpayEvents.removeAllListeners('Razorpay::WALLET_LOGO_URL');
   razorpayEvents.removeAllListeners('Razorpay::SUBSCRIPTION_AMOUNT');
-  razorpayEvents.removeAllListeners('Razorpay::CARD_NETWORK_LENGTH');
-  razorpayEvents.removeAllListeners('Razorpay::CARD_NUMBER_VALIDITY');
   razorpayEvents.removeAllListeners('Razorpay::VPA_VALIDITY');
   razorpayEvents.removeAllListeners('Razorpay::BANK_LOGO_URL');
   razorpayEvents.removeAllListeners('Razorpay::SQ_WALLET_LOGO_URL');
@@ -111,18 +122,10 @@ class Razorpay {
   }
 
   static getCardsNetwork(cardNumber){
-    return new Promise(function(resolve, reject){
-      if(isRzpInitialized){
-        razorpayEvents.addListener('Razorpay::CARD_NETWORK', (data)=>{
-          resolve(data);
-          removeSubscriptions();
-        });
-        NativeModules.RazorpayCustomui.getCardsNetwork(cardNumber);
-      }else{
-        reject({'error':'Please initialize razorpay first by calling Razorpay.init(key)'});
-      }
-
-    });
+    // Detected locally via BIN-prefix regex matching — no native round trip,
+    // and no dependency on initRazorpay() having run first.
+    const network = detectCardNetwork(cardNumber);
+    return Promise.resolve({data: network || ''});
   }
 
   static isCredAppAvailable(){
@@ -187,33 +190,16 @@ class Razorpay {
   }
 
   static getCardNetworkLength(networkName){
-    return new Promise(function(resolve, reject){
-      if(isRzpInitialized){
-        razorpayEvents.addListener('Razorpay::CARD_NETWORK_LENGTH', (data)=>{
-          resolve(data);
-          removeSubscriptions();
-        });
-        NativeModules.RazorpayCustomui.getCardNetworkLength(networkName);
-      }else{
-        reject({'error':'Please initialize razorpay first by calling Razorpay.init(key)'});
-      }
-
-    });
+    // Longest valid digit length for the network, from the same static table
+    // used by isValidCardNumber — no native round trip.
+    return Promise.resolve({data: cardNetworkMaxLength(networkName)});
   }
 
   static isValidCardNumber(cardNumber){
-    return new Promise(function(resolve, reject){
-      if(isRzpInitialized){
-        razorpayEvents.addListener('Razorpay::CARD_NUMBER_VALIDITY', (data)=>{
-          resolve(data);
-          removeSubscriptions();
-        })
-        NativeModules.RazorpayCustomui.isValidCardNumber(cardNumber);
-      }else{
-        reject({'error':'Please initialize razorpay first by calling Razorpay.init(key)'});
-      }
-
-    });
+    // Regex/BIN-prefix network match + length check + Luhn checksum, done
+    // entirely in JS — no native round trip, and no dependency on
+    // initRazorpay() having run first.
+    return Promise.resolve({data: validateCardNumber(cardNumber)});
   }
 
   static isValidVpa(vpaAddress){

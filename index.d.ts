@@ -1,3 +1,13 @@
+export {
+  detectCardNetwork,
+  isValidCardNumber as isCardNumberValid,
+  getCardNetworkLength,
+  isValidCardCvv,
+  passesLuhnCheck,
+  CARD_NETWORK_LENGTHS,
+} from './cardNetwork';
+export type { CardNetwork } from './cardNetwork';
+
 export type UpiApp = {
   appName: string;
   packageName: string;
@@ -92,6 +102,7 @@ declare class Razorpay {
   static getWalletLogoUrl(walletName: string): Promise<{ data: string }>;
   static isValidCardNumber(cardNumber: string): Promise<{ data: boolean }>;
   static getCardsNetwork(cardNumber: string): Promise<{ data: string }>;
+  static getCardNetworkLength(networkName: string): Promise<{ data: number }>;
 }
 
 export default Razorpay;
