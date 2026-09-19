@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>react-native-razorpay-customui-checkout — Docs</title>
+<meta name="description" content="Documentation for react-native-razorpay-customui-checkout, a React Native wrapper around Razorpay's native Custom UI Checkout SDK." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a class="brand" href="#overview">
+      <span class="brand-mark" aria-hidden="true">R</span>
+      <span class="brand-text">react-native-razorpay-customui-checkout</span>
+    </a>
+    <div class="topbar-actions">
+      <span class="badge" id="versionBadge">v0.1.0</span>
+      <span class="badge badge-license">MIT</span>
+      <a class="icon-link" href="https://github.com/anantkrsingh/react-native-razorpay-customui-checkout" target="_blank" rel="noopener" aria-label="View on GitHub">
+        <svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      </a>
+      <button class="icon-link theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Documentation navigation">
+    <div class="sidebar-search">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="searchInput" type="search" placeholder="Filter API methods…" aria-label="Filter API methods" />
+    </div>
+    <div class="sidebar-scroll">
+      <p class="nav-heading">Guide</p>
+      <ul>
+        <li><a href="#overview" class="nav-link">Overview</a></li>
+        <li><a href="#installation" class="nav-link">Installation</a></li>
+        <li><a href="#quick-start" class="nav-link">Quick start</a></li>
+        <li><a href="#error-handling" class="nav-link">Error handling</a></li>
+        <li><a href="#migration" class="nav-link">Migration notes</a></li>
+      </ul>
+      <p class="nav-heading">API reference</p>
+      <ul id="apiNavList">
+        <li><a href="#initRazorpay" class="nav-link" data-search="initRazorpay init setup key">initRazorpay</a></li>
+        <li><a href="#open" class="nav-link" data-search="open checkout payment pay">open</a></li>
+        <li><a href="#getPaymentMethods" class="nav-link" data-search="getPaymentMethods payment methods discovery">getPaymentMethods</a></li>
+        <li><a href="#getRecommendedInstruments" class="nav-link" data-search="getRecommendedInstruments recommended instruments">getRecommendedInstruments</a></li>
+        <li><a href="#getAppsWhichSupportUPI" class="nav-link" data-search="getAppsWhichSupportUPI upi apps intent">getAppsWhichSupportUPI</a></li>
+        <li><a href="#isValidVpa" class="nav-link" data-search="isValidVpa vpa upi validate">isValidVpa</a></li>
+        <li><a href="#isCredAppAvailable" class="nav-link" data-search="isCredAppAvailable cred app available">isCredAppAvailable</a></li>
+        <li><a href="#getWalletLogoUrl" class="nav-link" data-search="getWalletLogoUrl wallet logo">getWalletLogoUrl</a></li>
+        <li><a href="#getSqWalletLogoUrl" class="nav-link" data-search="getSqWalletLogoUrl square wallet logo">getSqWalletLogoUrl</a></li>
+        <li><a href="#getBankLogoUrl" class="nav-link" data-search="getBankLogoUrl bank logo netbanking">getBankLogoUrl</a></li>
+        <li><a href="#getSubscriptionAmount" class="nav-link" data-search="getSubscriptionAmount subscription amount">getSubscriptionAmount</a></li>
+        <li><a href="#calculateEmi" class="nav-link" data-search="calculateEmi emi interest calculate">calculateEmi</a></li>
+        <li><a href="#validateOptions" class="nav-link" data-search="validateOptions validate options payload">validateOptions</a></li>
+      </ul>
+      <p class="nav-heading">Card utilities</p>
+      <ul id="cardNavList">
+        <li><a href="#isValidCardNumber" class="nav-link" data-search="isValidCardNumber card number validation luhn">isValidCardNumber</a></li>
+        <li><a href="#getCardsNetwork" class="nav-link" data-search="getCardsNetwork card network detect">getCardsNetwork</a></li>
+        <li><a href="#getCardNetworkLength" class="nav-link" data-search="getCardNetworkLength card length max digits">getCardNetworkLength</a></li>
+        <li><a href="#named-exports" class="nav-link" data-search="detectCardNetwork isCardNumberValid isValidCardCvv passesLuhnCheck CARD_NETWORK_LENGTHS named exports">Named exports</a></li>
+      </ul>
+      <p class="nav-heading">Reference</p>
+      <ul>
+        <li><a href="#types" class="nav-link">TypeScript types</a></li>
+        <li><a href="#license" class="nav-link">License</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <main id="main" class="content">
+
+    <section id="overview" class="section">
+      <p class="eyebrow">Guide</p>
+      <h1>react-native-razorpay-customui-checkout</h1>
+      <p class="lead">A React Native wrapper around Razorpay's native <strong>Custom UI Checkout</strong> SDK, for apps that build their own payment UI instead of using Razorpay's hosted checkout screen.</p>
+
+      <div class="callout callout-info">
+        <strong>Status:</strong> this package starts as a fork of
+        <a href="https://github.com/razorpay/react-native-customui" target="_blank" rel="noopener"><code>react-native-customui</code></a>
+        (same Gradle/CocoaPods native dependencies). Native Android/iOS sources are currently a direct copy of upstream so the
+        build config keeps working as-is; the JS/TS layer is being rewritten incrementally to fix issues described below.
+      </div>
+
+      <h2>Why this fork exists</h2>
+      <p>The upstream JS bridge has a few sharp edges this package addresses:</p>
+      <ul class="feature-list">
+        <li><strong>Global event teardown.</strong> Upstream's <code>removeSubscriptions()</code> tears down <em>every</em> registered native listener whenever any single SDK call resolves, which corrupts concurrent or retried requests.</li>
+        <li><strong>Unsettled init promise.</strong> <code>initRazorpay()</code>'s JS promise never settles on some SDK versions.</li>
+        <li><strong>No cancellation/timeout/retry.</strong> Discovery calls like <code>getPaymentMethods</code> and <code>getAppsWhichSupportUPI</code> have no built-in cancellation, timeout, or retry support.</li>
+      </ul>
+
+      <h2>Requirements</h2>
+      <table class="table">
+        <thead><tr><th>Dependency</th><th>Version</th></tr></thead>
+        <tbody>
+          <tr><td>react</td><td><code>&gt;=16.8.0</code></td></tr>
+          <tr><td>react-native</td><td><code>&gt;=0.66.0</code></td></tr>
+          <tr><td>iOS deployment target</td><td><code>10.0</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="installation" class="section">
+      <p class="eyebrow">Guide</p>
+      <h2>Installation</h2>
+      <p>Install the package, then link the native iOS pod. Android is linked automatically via autolinking.</p>
+      <div class="code-block" data-lang="sh">
+        <div class="code-block-bar"><span>sh</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>npm install react-native-razorpay-customui-checkout
+cd ios &amp;&amp; pod install</code></pre>
+      </div>
+      <p>Or with Yarn:</p>
+      <div class="code-block" data-lang="sh">
+        <div class="code-block-bar"><span>sh</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>yarn add react-native-razorpay-customui-checkout
+cd ios &amp;&amp; pod install</code></pre>
+      </div>
+      <div class="callout callout-warn">
+        The native dependency <code>razorpay-customui-pod (~&gt; 2.1.4)</code> is pulled in automatically via CocoaPods on iOS — no manual pod entry needed.
+      </div>
+    </section>
+
+    <section id="quick-start" class="section">
+      <p class="eyebrow">Guide</p>
+      <h2>Quick start</h2>
+      <p>Initialize the SDK with your Razorpay key once (e.g. on app start or before opening checkout), then call <a href="#open"><code>open()</code></a> with your order details.</p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>import Razorpay from 'react-native-razorpay-customui-checkout';
+
+// 1. Initialize once with your key
+await Razorpay.initRazorpay('rzp_test_xxxxxxxxxxxx');
+
+// 2. Open checkout for a specific payment method / order
+try {
+  const payment = await Razorpay.open({
+    key_id: 'rzp_test_xxxxxxxxxxxx',
+    amount: '50000',        // amount in the smallest currency unit (paise)
+    currency: 'INR',
+    order_id: 'order_DBJOWzybf0sJbb',
+    method: 'upi',
+    vpa: 'success@razorpay',
+    email: 'customer@example.com',
+    contact: '9999999999',
+  });
+
+  console.log('Payment succeeded:', payment.razorpay_payment_id);
+} catch (error) {
+  console.log('Payment failed:', error);
+}</code></pre>
+      </div>
+    </section>
+
+    <section id="error-handling" class="section">
+      <p class="eyebrow">Guide</p>
+      <h2>Error handling</h2>
+      <p>Every discovery/action method that depends on the native SDK — everything except the local <a href="#isValidCardNumber">card utilities</a> — requires <a href="#initRazorpay"><code>initRazorpay(key)</code></a> to have resolved first. Calling one before init rejects immediately with:</p>
+      <div class="code-block" data-lang="json">
+        <div class="code-block-bar"><span>json</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>{ "error": "Please initialize razorpay first by calling Razorpay.init(key)" }</code></pre>
+      </div>
+      <p><a href="#open"><code>open()</code></a> rejects with a <code>RazorpayError</code> shape on payment failure or cancellation:</p>
+      <div class="code-block" data-lang="ts">
+        <div class="code-block-bar"><span>ts</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>type RazorpayError = {
+  code?: number | string;
+  description?: string;
+  error?: {
+    code?: string;
+    description?: string;
+    source?: string;
+    step?: string;
+    reason?: string;
+  };
+};</code></pre>
+      </div>
+      <div class="callout callout-warn">
+        Because event listeners are torn down globally when any call resolves (a known upstream issue this fork is progressively fixing — see <a href="#overview">Overview</a>), avoid firing multiple native calls concurrently until the JS rewrite lands.
+      </div>
+    </section>
+
+    <section id="migration" class="section">
+      <p class="eyebrow">Guide</p>
+      <h2>Migration notes</h2>
+      <p>If you're coming from <code>react-native-customui</code>, the API surface is intentionally close to a drop-in:</p>
+      <ul class="feature-list">
+        <li>Import path changes to <code>react-native-razorpay-customui-checkout</code>; the default export is still a <code>Razorpay</code> class with static methods.</li>
+        <li><code>isValidCardNumber</code>, <code>getCardsNetwork</code>, and <code>getCardNetworkLength</code> now resolve <strong>entirely in JS</strong> (regex/BIN-prefix matching + Luhn checksum) instead of round-tripping to native code — they work even before <code>initRazorpay()</code> has run.</li>
+        <li>New named exports are available directly for card validation without going through the <code>Razorpay</code> class — see <a href="#named-exports">Named exports</a>.</li>
+      </ul>
+    </section>
+
+    <section id="api-reference-heading" class="section section-heading-only">
+      <p class="eyebrow">Reference</p>
+      <h2>API reference</h2>
+      <p>All methods below are static methods on the default <code>Razorpay</code> export, e.g. <code>Razorpay.open(options)</code>.</p>
+    </section>
+
+    <article id="initRazorpay" class="method-card">
+      <header class="method-header">
+        <h3><code>initRazorpay(key)</code></h3>
+        <span class="pill pill-async">async</span>
+      </header>
+      <p>Initializes the Razorpay native SDK with your API key. Must resolve before calling any other native-backed method.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>key</code></td><td><code>string</code></td><td>Yes</td><td>Your Razorpay <code>key_id</code>.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;void&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>await Razorpay.initRazorpay('rzp_test_xxxxxxxxxxxx');</code></pre>
+      </div>
+    </article>
+
+    <article id="open" class="method-card">
+      <header class="method-header">
+        <h3><code>open(options, successCallback?, errorCallback?)</code></h3>
+        <span class="pill pill-async">async</span>
+      </header>
+      <p>Opens native checkout for the given options and resolves on payment success, or rejects on failure/cancellation. Callbacks are optional — if provided, they're used instead of the promise resolve/reject.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>options</code></td><td><code>RazorpayOpenOptions</code></td><td>Yes</td><td>Order and payment method details. See <a href="#types">types</a>.</td></tr>
+          <tr><td><code>successCallback</code></td><td><code>(data: RazorpaySuccess) =&gt; void</code></td><td>No</td><td>Called instead of resolving the promise on success.</td></tr>
+          <tr><td><code>errorCallback</code></td><td><code>(error: RazorpayError) =&gt; void</code></td><td>No</td><td>Called instead of rejecting the promise on failure.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;RazorpaySuccess&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const payment = await Razorpay.open({
+  key_id: 'rzp_test_xxxxxxxxxxxx',
+  amount: '50000',
+  currency: 'INR',
+  order_id: 'order_DBJOWzybf0sJbb',
+  method: 'card',
+  'card[name]': 'John Doe',
+  'card[number]': '4111111111111111',
+  'card[cvv]': '123',
+  'card[expiry_month]': '12',
+  'card[expiry_year]': '2028',
+});</code></pre>
+      </div>
+    </article>
+
+    <article id="getPaymentMethods" class="method-card">
+      <header class="method-header">
+        <h3><code>getPaymentMethods(callback?)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Fetches the payment methods enabled for your merchant account (cards, UPI, netbanking, wallets, EMI, etc).</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>callback</code></td><td><code>(data: PaymentMethods) =&gt; void</code></td><td>No</td><td>Called instead of resolving the promise.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;PaymentMethods&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const methods = await Razorpay.getPaymentMethods();
+console.log(methods.upi, methods.netbanking, methods.wallet);</code></pre>
+      </div>
+    </article>
+
+    <article id="getRecommendedInstruments" class="method-card">
+      <header class="method-header">
+        <h3><code>getRecommendedInstruments(options, successCallback?, errorCallback?)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Fetches the payment instruments Razorpay recommends for the given order/customer context.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>options</code></td><td><code>Record&lt;string, unknown&gt;</code></td><td>No</td><td>Context passed through to the native SDK; defaults to <code>{}</code>.</td></tr>
+          <tr><td><code>successCallback</code></td><td><code>(data) =&gt; void</code></td><td>No</td><td>Called instead of resolving the promise.</td></tr>
+          <tr><td><code>errorCallback</code></td><td><code>(error) =&gt; void</code></td><td>No</td><td>Called instead of rejecting the promise.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;unknown&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const instruments = await Razorpay.getRecommendedInstruments({
+  amount: 50000,
+  order_id: 'order_DBJOWzybf0sJbb',
+});</code></pre>
+      </div>
+    </article>
+
+    <article id="getAppsWhichSupportUPI" class="method-card">
+      <header class="method-header">
+        <h3><code>getAppsWhichSupportUPI(callback?)</code></h3>
+        <span class="pill pill-async">async</span>
+      </header>
+      <p>Returns the UPI apps installed on the device that support UPI intent flows (e.g. Google Pay, PhonePe).</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>callback</code></td><td><code>(data: &#123; data: UpiApp[] &#125;) =&gt; void</code></td><td>No</td><td>Called instead of resolving the promise.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: UpiApp[] &#125;&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: apps } = await Razorpay.getAppsWhichSupportUPI();
+apps.forEach((app) =&gt; console.log(app.appName, app.packageName));</code></pre>
+      </div>
+    </article>
+
+    <article id="isValidVpa" class="method-card">
+      <header class="method-header">
+        <h3><code>isValidVpa(vpaAddress)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Validates a UPI VPA (Virtual Payment Address) against Razorpay's servers.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>vpaAddress</code></td><td><code>string</code></td><td>Yes</td><td>The VPA to validate, e.g. <code>name@bank</code>.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; success?: boolean &#125;&gt;</code> — rejects with an error object if the VPA is invalid.</p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>try {
+  const result = await Razorpay.isValidVpa('success@razorpay');
+  console.log('valid VPA:', result.success);
+} catch (err) {
+  console.log('invalid VPA:', err);
+}</code></pre>
+      </div>
+    </article>
+
+    <article id="isCredAppAvailable" class="method-card">
+      <header class="method-header">
+        <h3><code>isCredAppAvailable()</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Checks whether the CRED app is installed and available for CRED-based payments.</p>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;unknown&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const credAvailable = await Razorpay.isCredAppAvailable();</code></pre>
+      </div>
+    </article>
+
+    <article id="getWalletLogoUrl" class="method-card">
+      <header class="method-header">
+        <h3><code>getWalletLogoUrl(walletName)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Fetches the logo URL for a given wallet, for rendering in a custom payment method picker.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>walletName</code></td><td><code>string</code></td><td>Yes</td><td>Wallet key as returned by <a href="#getPaymentMethods"><code>getPaymentMethods()</code></a>.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: string &#125;&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: logoUrl } = await Razorpay.getWalletLogoUrl('paytm');</code></pre>
+      </div>
+    </article>
+
+    <article id="getSqWalletLogoUrl" class="method-card">
+      <header class="method-header">
+        <h3><code>getSqWalletLogoUrl(walletName)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Fetches the square variant of a wallet's logo URL (used for grid-style pickers).</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>walletName</code></td><td><code>string</code></td><td>Yes</td><td>Wallet key as returned by <a href="#getPaymentMethods"><code>getPaymentMethods()</code></a>.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;unknown&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const logo = await Razorpay.getSqWalletLogoUrl('paytm');</code></pre>
+      </div>
+    </article>
+
+    <article id="getBankLogoUrl" class="method-card">
+      <header class="method-header">
+        <h3><code>getBankLogoUrl(bankName)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Fetches the logo URL for a given netbanking bank code.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>bankName</code></td><td><code>string</code></td><td>Yes</td><td>Bank code as returned by <a href="#getPaymentMethods"><code>getPaymentMethods()</code></a> under <code>netbanking</code>.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: string &#125;&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: logoUrl } = await Razorpay.getBankLogoUrl('HDFC');</code></pre>
+      </div>
+    </article>
+
+    <article id="getSubscriptionAmount" class="method-card">
+      <header class="method-header">
+        <h3><code>getSubscriptionAmount(subscriptionId)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init</span>
+      </header>
+      <p>Fetches the amount due for a given subscription ID.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>subscriptionId</code></td><td><code>string</code></td><td>Yes</td><td>The Razorpay subscription ID.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;unknown&gt;</code> — rejects if the response contains an <code>error</code> field.</p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const amount = await Razorpay.getSubscriptionAmount('sub_00000000000001');</code></pre>
+      </div>
+    </article>
+
+    <article id="calculateEmi" class="method-card">
+      <header class="method-header">
+        <h3><code>calculateEmi(principleAmount, durationInMonths, annualInterestRate)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-local">local</span>
+      </header>
+      <p>Calculates the monthly EMI amount for a principal, duration, and annual interest rate. Computed entirely in JS — no native call or init required.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>principleAmount</code></td><td><code>number</code></td><td>Yes</td><td>Loan principal.</td></tr>
+          <tr><td><code>durationInMonths</code></td><td><code>number</code></td><td>Yes</td><td>Tenure in months.</td></tr>
+          <tr><td><code>annualInterestRate</code></td><td><code>number</code></td><td>Yes</td><td>Annual interest rate as a percentage (e.g. <code>12</code> for 12%).</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: number &#125;&gt;</code> — the rounded monthly EMI amount.</p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: emi } = await Razorpay.calculateEmi(50000, 12, 14);
+console.log(emi); // e.g. 4508</code></pre>
+      </div>
+    </article>
+
+    <article id="validateOptions" class="method-card">
+      <header class="method-header">
+        <h3><code>validateOptions(payload)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-init">requires init (Android)</span>
+      </header>
+      <p>Validates a checkout options payload before calling <a href="#open"><code>open()</code></a>. On iOS this always resolves <code>true</code> without a native round trip; on Android it delegates to the native SDK and requires <code>initRazorpay()</code> first.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>payload</code></td><td><code>RazorpayOpenOptions</code></td><td>Yes</td><td>The same options object you intend to pass to <code>open()</code>.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: boolean &#125;&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: isValid } = await Razorpay.validateOptions(options);
+if (isValid) {
+  await Razorpay.open(options);
+}</code></pre>
+      </div>
+    </article>
+
+    <section id="card-utilities-heading" class="section section-heading-only">
+      <p class="eyebrow">Reference</p>
+      <h2>Card utilities</h2>
+      <p>Card number/network/CVV validation runs entirely in JS via regex/BIN-prefix matching and a Luhn checksum — no native round trip, and no dependency on <a href="#initRazorpay"><code>initRazorpay()</code></a> having run. Network codes match Razorpay's own <code>card_networks</code> keys: <code>AMEX</code>, <code>MC</code>, <code>VISA</code>, <code>RUPAY</code>, <code>MAES</code>, <code>JCB</code>, <code>DICL</code>, <code>UNP</code>.</p>
+    </section>
+
+    <article id="isValidCardNumber" class="method-card">
+      <header class="method-header">
+        <h3><code>isValidCardNumber(cardNumber)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-local">local</span>
+      </header>
+      <p>Full validation: known network, correct digit length for that network, and a passing Luhn checksum.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>cardNumber</code></td><td><code>string</code></td><td>Yes</td><td>Card number, digits or formatted with spaces/dashes.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: boolean &#125;&gt;</code></p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: isValid } = await Razorpay.isValidCardNumber('4111 1111 1111 1111');</code></pre>
+      </div>
+    </article>
+
+    <article id="getCardsNetwork" class="method-card">
+      <header class="method-header">
+        <h3><code>getCardsNetwork(cardNumber)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-local">local</span>
+      </header>
+      <p>Detects the card network from a (possibly partial) card number by BIN prefix, so it can be shown while the user is still typing.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>cardNumber</code></td><td><code>string</code></td><td>Yes</td><td>Full or partial card number.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: string &#125;&gt;</code> — one of the <a href="#named-exports">card network codes</a>, or an empty string if unmatched.</p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: network } = await Razorpay.getCardsNetwork('4111');
+console.log(network); // "VISA"</code></pre>
+      </div>
+    </article>
+
+    <article id="getCardNetworkLength" class="method-card">
+      <header class="method-header">
+        <h3><code>getCardNetworkLength(networkName)</code></h3>
+        <span class="pill pill-async">async</span>
+        <span class="pill pill-local">local</span>
+      </header>
+      <p>Returns the longest valid digit length for a network, useful for an input's <code>maxLength</code>.</p>
+      <h4>Parameters</h4>
+      <table class="table params-table">
+        <thead><tr><th>Name</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>networkName</code></td><td><code>string</code></td><td>Yes</td><td>A card network code, e.g. <code>"VISA"</code>.</td></tr>
+        </tbody>
+      </table>
+      <h4>Returns</h4>
+      <p><code>Promise&lt;&#123; data: number &#125;&gt;</code> — <code>0</code> if the network is unknown.</p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>const { data: maxLength } = await Razorpay.getCardNetworkLength('AMEX');
+console.log(maxLength); // 15</code></pre>
+      </div>
+    </article>
+
+    <article id="named-exports" class="method-card">
+      <header class="method-header">
+        <h3>Named exports</h3>
+        <span class="pill pill-local">local, synchronous</span>
+      </header>
+      <p>The same card-validation logic is also available as plain synchronous named exports, without going through the <code>Razorpay</code> class:</p>
+      <div class="code-block" data-lang="js">
+        <div class="code-block-bar"><span>js</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>import {
+  detectCardNetwork,
+  isCardNumberValid,
+  getCardNetworkLength,
+  isValidCardCvv,
+  passesLuhnCheck,
+  CARD_NETWORK_LENGTHS,
+} from 'react-native-razorpay-customui-checkout';
+
+detectCardNetwork('4111');           // 'VISA' | null
+isCardNumberValid('4111111111111111'); // boolean
+getCardNetworkLength('VISA');        // 16
+isValidCardCvv('123', 'VISA');       // true — 4 digits required for 'AMEX', 3 otherwise
+passesLuhnCheck('4111111111111111'); // boolean
+CARD_NETWORK_LENGTHS.VISA;           // [13, 16, 19]</code></pre>
+      </div>
+      <table class="table params-table">
+        <thead><tr><th>Export</th><th>Signature</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>detectCardNetwork</code></td><td><code>(cardNumber: string) =&gt; CardNetwork | null</code></td><td>Same BIN-prefix detection used internally.</td></tr>
+          <tr><td><code>isCardNumberValid</code></td><td><code>(cardNumber: string) =&gt; boolean</code></td><td>Alias for the underlying <code>isValidCardNumber</code> function.</td></tr>
+          <tr><td><code>getCardNetworkLength</code></td><td><code>(network: string) =&gt; number</code></td><td>Longest valid digit length, or <code>0</code>.</td></tr>
+          <tr><td><code>isValidCardCvv</code></td><td><code>(cvv: string, network: CardNetwork | string | null) =&gt; boolean</code></td><td>Amex requires a 4-digit CVV; every other network requires 3.</td></tr>
+          <tr><td><code>passesLuhnCheck</code></td><td><code>(digits: string) =&gt; boolean</code></td><td>Raw Luhn checksum, no network/length checks.</td></tr>
+          <tr><td><code>CARD_NETWORK_LENGTHS</code></td><td><code>Record&lt;CardNetwork, number[]&gt;</code></td><td>Table of valid digit lengths per network.</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <section id="types" class="section">
+      <p class="eyebrow">Reference</p>
+      <h2>TypeScript types</h2>
+      <p>Full type definitions ship in <code>index.d.ts</code> and <code>cardNetwork.d.ts</code>.</p>
+
+      <h3><code>RazorpayOpenOptions</code></h3>
+      <div class="code-block" data-lang="ts">
+        <div class="code-block-bar"><span>ts</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>type RazorpayOpenOptions = {
+  key_id: string;
+  amount: string | number;
+  currency?: string;
+  order_id: string;
+  email?: string;
+  contact?: string;
+  description?: string;
+  method: string;
+  image?: string;
+  notes?: Record&lt;string, string&gt;;
+  upi_app_package_name?: string;
+  '_[flow]'?: string;
+  vpa?: string;
+  bank?: string;
+  wallet?: string;
+  provider?: string;
+  'card[name]'?: string;
+  'card[number]'?: string;
+  'card[cvv]'?: string;
+  'card[expiry_month]'?: string;
+  'card[expiry_year]'?: string;
+  [key: string]: unknown;
+};</code></pre>
+      </div>
+
+      <h3><code>RazorpaySuccess</code></h3>
+      <div class="code-block" data-lang="ts">
+        <div class="code-block-bar"><span>ts</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>type RazorpaySuccess = {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+};</code></pre>
+      </div>
+
+      <h3><code>RazorpayError</code></h3>
+      <div class="code-block" data-lang="ts">
+        <div class="code-block-bar"><span>ts</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>type RazorpayError = {
+  code?: number | string;
+  description?: string;
+  error?: {
+    code?: string;
+    description?: string;
+    source?: string;
+    step?: string;
+    reason?: string;
+  };
+};</code></pre>
+      </div>
+
+      <h3><code>PaymentMethods</code></h3>
+      <div class="code-block" data-lang="ts">
+        <div class="code-block-bar"><span>ts</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>type PaymentMethods = {
+  entity?: string;
+  card?: boolean;
+  credit_card?: boolean;
+  debit_card?: boolean;
+  prepaid_card?: boolean;
+  upi?: boolean;
+  upi_intent?: boolean;
+  upi_type?: { collect?: number; intent?: number };
+  upi_config?: Record&lt;string, unknown&gt;;
+  netbanking?: Record&lt;string, string&gt;;
+  wallet?: Record&lt;string, boolean | string&gt;;
+  paylater?: Record&lt;string, boolean&gt; | boolean;
+  emi?: boolean | Record&lt;string, unknown&gt;;
+  cardless_emi?: Record&lt;string, unknown&gt; | boolean;
+  card_networks?: Record&lt;string, number&gt;;
+  app?: Record&lt;string, number&gt;;
+  gpay?: boolean;
+  google_pay_cards?: boolean;
+  cod?: boolean;
+  [key: string]: unknown;
+};</code></pre>
+      </div>
+
+      <h3><code>UpiApp</code></h3>
+      <div class="code-block" data-lang="ts">
+        <div class="code-block-bar"><span>ts</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>type UpiApp = {
+  appName: string;
+  packageName: string;
+  iconBase64?: string;
+  appLogo?: string;
+};</code></pre>
+      </div>
+
+      <h3><code>CardNetwork</code></h3>
+      <div class="code-block" data-lang="ts">
+        <div class="code-block-bar"><span>ts</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>type CardNetwork =
+  | 'VISA' | 'MC' | 'AMEX' | 'RUPAY'
+  | 'MAES' | 'JCB' | 'DICL' | 'UNP';</code></pre>
+      </div>
+    </section>
+
+    <section id="license" class="section">
+      <p class="eyebrow">Reference</p>
+      <h2>License</h2>
+      <p>MIT. Native Android/iOS sources originate from <code>react-native-customui</code>, © 2016 Razorpay Software Pvt. Ltd.</p>
+      <p>
+        <a href="https://github.com/anantkrsingh/react-native-razorpay-customui-checkout" target="_blank" rel="noopener">Repository</a>
+        · <a href="https://github.com/anantkrsingh/react-native-razorpay-customui-checkout/blob/main/LICENSE" target="_blank" rel="noopener">LICENSE</a>
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p>react-native-razorpay-customui-checkout — generated documentation.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
