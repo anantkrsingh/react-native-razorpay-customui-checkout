@@ -1,0 +1,37 @@
+{
+  "name": "react-native-razorpay-customui-checkout",
+  "version": "0.1.0",
+  "description": "React Native wrapper around Razorpay's native Custom UI Checkout SDK",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "android",
+    "ios",
+    "index.js",
+    "index.d.ts",
+    "react-native-razorpay-customui-checkout.podspec",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "echo \"no tests yet\" && exit 0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.66.0"
+  },
+  "keywords": [
+    "react-native",
+    "razorpay",
+    "payments",
+    "checkout",
+    "customui"
+  ],
+  "author": "Anant Kumar Singh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anantkrsingh/react-native-razorpay-customui-checkout.git"
+  },
+  "homepage": "https://github.com/anantkrsingh/react-native-razorpay-customui-checkout#readme"
+}
