@@ -88,7 +88,14 @@ public class Utils {
 				} else if(value instanceof Boolean){
 					writableMap.putBoolean(key,jsonObject.getBoolean(key));
 				} else if (value instanceof Number) {
-					writableMap.putInt(key, jsonObject.getInt(key));
+					// Numbers outside the 32-bit int range (e.g. large subscription
+					// amounts) must not be silently truncated by putInt().
+					long longValue = ((Number) value).longValue();
+					if (longValue == (int) longValue) {
+						writableMap.putInt(key, (int) longValue);
+					} else {
+						writableMap.putDouble(key, ((Number) value).doubleValue());
+					}
 				} else if (value instanceof String) {
 					writableMap.putString(key, jsonObject.getString(key));
 				} else if (value instanceof JSONObject) {
@@ -112,8 +119,16 @@ public class Utils {
 				Object value = jsonArray.get(i);
 				if (value instanceof Float || value instanceof Double) {
 					writableArray.pushDouble(jsonArray.getDouble(i));
+				} else if (value instanceof Boolean) {
+					writableArray.pushBoolean(jsonArray.getBoolean(i));
 				} else if (value instanceof Number) {
-					writableArray.pushInt(jsonArray.getInt(i));
+					// Same overflow guard as jsonToWritableMap: don't truncate longs.
+					long longValue = ((Number) value).longValue();
+					if (longValue == (int) longValue) {
+						writableArray.pushInt((int) longValue);
+					} else {
+						writableArray.pushDouble(((Number) value).doubleValue());
+					}
 				} else if (value instanceof String) {
 					writableArray.pushString(jsonArray.getString(i));
 				} else if (value instanceof JSONObject) {

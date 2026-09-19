@@ -42,8 +42,9 @@ import com.razorpay.ValidationListener;
 
 public class RazorpayCustomModule extends ReactContextBaseJavaModule implements ActivityEventListener, RzpUpiSupportedAppsCallback  {
 
+  private static final String TAG = "RazorpayCustomui";
 
-  public static final int RZP_REQUEST_CODE = 72967729;
+  public static final int UNKNOWN_ERROR_CODE = 0;
   public static final String MAP_KEY_RZP_PAYMENT_ID = "razorpay_payment_id";
   public static final String MAP_KEY_PAYMENT_ID = "payment_id";
   public static final String MAP_KEY_ERROR_CODE = "code";
@@ -67,80 +68,103 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
   @ReactMethod
   public void open(ReadableMap options) {
     final Activity currentActivity = getCurrentActivity();
+    if (currentActivity == null) {
+      onPaymentError(UNKNOWN_ERROR_CODE, "No active activity to start payment", new JSONObject());
+      return;
+    }
     try {
       JSONObject optionsJSON = Utils.readableMapToJson(options);
       Intent intent = new Intent(currentActivity, RazorpayPaymentActivity.class);
       intent.putExtra(Constants.OPTIONS, optionsJSON.toString());
       currentActivity.startActivityForResult(intent, RazorpayPaymentActivity.RZP_REQUEST_CODE);
-    } catch (Exception e) {}
-  }
-//
-//  private Razorpay initializeAndReturn(String key){
-//    final Activity currentActivity = getCurrentActivity();
-//  }
-
-  @ReactMethod
-  public void initRazorpay(String key){
-    final Activity currentActivity = getCurrentActivity();
-    if(currentActivity != null){
-      currentActivity.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          razorpay = new Razorpay(currentActivity, key);
-        }
-      });
+    } catch (Exception e) {
+      Log.e(TAG, "Failed to start payment activity", e);
+      onPaymentError(UNKNOWN_ERROR_CODE, "Failed to start payment: " + e.getMessage(), new JSONObject());
     }
   }
 
   @ReactMethod
-  public void getCardsNetwork(String cardNumber){
-    String cardNetwork = razorpay.getCardNetwork(cardNumber);
-      try{
-        JSONObject payload = new JSONObject();
-        payload.put("data",cardNetwork);
-        sendEvent("Razorpay::CARD_NETWORK", Utils.jsonToWritableMap(payload));
-      }catch(JSONException e) {
+  public void initRazorpay(String key){
+    final Activity currentActivity = getCurrentActivity();
+    if (currentActivity == null) {
+      Log.e(TAG, "initRazorpay called with no active activity; razorpay was not initialized");
+      return;
+    }
+    currentActivity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        razorpay = new Razorpay(currentActivity, key);
       }
+    });
+  }
+
+  @ReactMethod
+  public void getCardsNetwork(String cardNumber){
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::CARD_NETWORK", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
+    try {
+      String cardNetwork = razorpay.getCardNetwork(cardNumber);
+      JSONObject payload = new JSONObject();
+      payload.put("data", cardNetwork);
+      sendEvent("Razorpay::CARD_NETWORK", Utils.jsonToWritableMap(payload));
+    } catch (Exception e) {
+      emitErrorPayload("Razorpay::CARD_NETWORK", e.getMessage());
+    }
   }
 
   @ReactMethod
   public void getCardNetworkLength(String networkName){
-   int length = this.razorpay.getCardNetworkLength(networkName);
-       try{
-         JSONObject payload = new JSONObject();
-         payload.put("data",length);
-         sendEvent("Razorpay::CARD_NETWORK_LENGTH", Utils.jsonToWritableMap(payload));
-       }catch(JSONException e){}
-
-
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::CARD_NETWORK_LENGTH", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
+    try {
+      int length = this.razorpay.getCardNetworkLength(networkName);
+      JSONObject payload = new JSONObject();
+      payload.put("data", length);
+      sendEvent("Razorpay::CARD_NETWORK_LENGTH", Utils.jsonToWritableMap(payload));
+    } catch (Exception e) {
+      emitErrorPayload("Razorpay::CARD_NETWORK_LENGTH", e.getMessage());
+    }
   }
 
   @ReactMethod
   public void getWalletLogoUrl(String walletName){
-    String walletUrl = this.razorpay.getWalletLogoUrl(walletName);
-    try{
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::WALLET_LOGO_URL", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
+    try {
+      String walletUrl = this.razorpay.getWalletLogoUrl(walletName);
       JSONObject payload = new JSONObject();
-      payload.put("data",walletUrl);
+      payload.put("data", walletUrl);
       sendEvent("Razorpay::WALLET_LOGO_URL", Utils.jsonToWritableMap(payload));
-    }catch (JSONException e){
-
+    } catch (Exception e) {
+      emitErrorPayload("Razorpay::WALLET_LOGO_URL", e.getMessage());
     }
   }
 
   @ReactMethod
   public void isCredAppAvailable(){
-    final Activity currentActivity = getCurrentActivity();
-    boolean available = Razorpay.isCredAppInstalled(currentActivity);
-    try{
+    try {
+      final Activity currentActivity = getCurrentActivity();
+      boolean available = Razorpay.isCredAppInstalled(currentActivity);
       JSONObject payload = new JSONObject();
-      payload.put("data",available);
-      Log.d("REACT_NATIVE",payload.toString());
+      payload.put("data", available);
       sendEvent("Razorpay::CRED_APP_AVAILABLE", Utils.jsonToWritableMap(payload));
-    }catch (JSONException e){}
+    } catch (Exception e) {
+      emitErrorPayload("Razorpay::CRED_APP_AVAILABLE", e.getMessage());
+    }
   }
 
   @ReactMethod
   public void getSubscriptionAmount(String subscriptionId){
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::SUBSCRIPTION_AMOUNT", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
     this.razorpay.getSubscriptionAmount(subscriptionId, new SubscriptionAmountCallback() {
       @Override
       public void onSubscriptionAmountReceived(long l) {
@@ -149,26 +173,24 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
           payload.put("data",l);
           sendEvent("Razorpay::SUBSCRIPTION_AMOUNT", Utils.jsonToWritableMap(payload));
         } catch (JSONException e) {
-          e.printStackTrace();
+          emitErrorPayload("Razorpay::SUBSCRIPTION_AMOUNT", e.getMessage());
         }
 
       }
 
       @Override
       public void onError(String s) {
-        JSONObject payload = new JSONObject();
-        try {
-          payload.put("error",s);
-          sendEvent("Razorpay::SUBSCRIPTION_AMOUNT", Utils.jsonToWritableMap(payload));
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
+        emitErrorPayload("Razorpay::SUBSCRIPTION_AMOUNT", s);
       }
     });
   }
 
   @ReactMethod
   public void isValidVpa(String vpaAddress){
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::VPA_VALIDITY", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
     this.razorpay.isValidVpa(vpaAddress, new ValidateVpaCallback() {
       @Override
       public void onResponse(JSONObject jsonObject) {
@@ -177,52 +199,57 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
 
       @Override
       public void onFailure() {
-        JSONObject payload = new JSONObject();
-        try {
-          payload.put("error", "VPA Invalid");
-          sendEvent("Razorpay::VPA_VALIDITY",Utils.jsonToWritableMap(payload));
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-
+        emitErrorPayload("Razorpay::VPA_VALIDITY", "VPA Invalid");
       }
     });
   }
 
   @ReactMethod
   public void isValidCardNumber(String cardNumber){
-    boolean validity = this.razorpay.isValidCardNumber(cardNumber);
-    JSONObject payload = new JSONObject();
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::CARD_NUMBER_VALIDITY", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
     try {
+      boolean validity = this.razorpay.isValidCardNumber(cardNumber);
+      JSONObject payload = new JSONObject();
       payload.put("data",validity);
       sendEvent("Razorpay::CARD_NUMBER_VALIDITY", Utils.jsonToWritableMap(payload));
-    } catch (JSONException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      emitErrorPayload("Razorpay::CARD_NUMBER_VALIDITY", e.getMessage());
     }
   }
 
 
   @ReactMethod
   public void getBankLogoUrl(String bankName){
-    String bankUrl = this.razorpay.getBankLogoUrl(bankName);
-    JSONObject payload = new JSONObject();
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::BANK_LOGO_URL", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
     try {
+      String bankUrl = this.razorpay.getBankLogoUrl(bankName);
+      JSONObject payload = new JSONObject();
       payload.put("data", bankUrl);
       sendEvent("Razorpay::BANK_LOGO_URL",Utils.jsonToWritableMap(payload));
-    } catch (JSONException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      emitErrorPayload("Razorpay::BANK_LOGO_URL", e.getMessage());
     }
   }
 
   @ReactMethod
   public void getSqWalletLogoUrl(String walletName){
-    String walletLogoSq = this.razorpay.getWalletSqLogoUrl(walletName);
-    JSONObject payload = new JSONObject();
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::SQ_WALLET_LOGO_URL", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
     try {
+      String walletLogoSq = this.razorpay.getWalletSqLogoUrl(walletName);
+      JSONObject payload = new JSONObject();
       payload.put("data", walletLogoSq);
       sendEvent("Razorpay::SQ_WALLET_LOGO_URL",Utils.jsonToWritableMap(payload));
-    } catch (JSONException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      emitErrorPayload("Razorpay::SQ_WALLET_LOGO_URL", e.getMessage());
     }
   }
 
@@ -238,7 +265,11 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
 
   @ReactMethod
   public void getPaymentMethods(){
-   razorpay.getPaymentMethods(new PaymentMethodsCallback() {
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::PAYMENT_METHODS_ERROR", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
+    razorpay.getPaymentMethods(new PaymentMethodsCallback() {
              @Override
              public void onPaymentMethodsReceived(String result) {
 
@@ -251,7 +282,9 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
                  try {
                    JSONObject paymentMethods = new JSONObject(result);
                    sendEvent("Razorpay::PAYMENT_METHODS", Utils.jsonToWritableMap(paymentMethods));
-                 } catch (Exception e) {}
+                 } catch (Exception e) {
+                   emitErrorPayload("Razorpay::PAYMENT_METHODS_ERROR", "Failed to parse payment methods: " + e.getMessage());
+                 }
              }
 
              @Override
@@ -259,7 +292,9 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
                try {
                  JSONObject jsonError = new JSONObject(error);
                  sendEvent("Razorpay::PAYMENT_METHODS_ERROR", Utils.jsonToWritableMap(jsonError));
-               } catch (Exception e) {}
+               } catch (Exception e) {
+                 emitErrorPayload("Razorpay::PAYMENT_METHODS_ERROR", error);
+               }
              }
          });
 
@@ -267,6 +302,10 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
 
   @ReactMethod
   public void getRecommendedInstruments(ReadableMap options){
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::RECOMMENDED_INSTRUMENTS_ERROR", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
     razorpay.getRecommendedInstruments(Utils.readableMapToJson(options), new RecommendedInstrumentsCallback() {
       @Override
       public void onRecommendedInstrumentsReceived(JSONObject recommendedInstruments) {
@@ -275,19 +314,17 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
 
       @Override
       public void onError(String error) {
-        JSONObject payload = new JSONObject();
-        try {
-          payload.put("error", error);
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-        sendEvent("Razorpay::RECOMMENDED_INSTRUMENTS_ERROR", Utils.jsonToWritableMap(payload));
+        emitErrorPayload("Razorpay::RECOMMENDED_INSTRUMENTS_ERROR", error);
       }
     });
   }
 
   @ReactMethod
   public void validateOptions(ReadableMap payload){
+    if (razorpay == null) {
+      emitErrorPayload("Razorpay::VALIDATE_OPTIONS_ERROR", "Razorpay is not initialized. Call initRazorpay first.");
+      return;
+    }
     razorpay.validateFields(Utils.readableMapToJson(payload), new ValidationListener() {
       @Override
       public void onValidationSuccess() {
@@ -296,7 +333,7 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
           data.put("data", true);
           sendEvent("Razorpay::VALIDATE_OPTIONS", Utils.jsonToWritableMap(data));
         }catch (JSONException e){
-
+          emitErrorPayload("Razorpay::VALIDATE_OPTIONS_ERROR", e.getMessage());
         }
       }
 
@@ -308,7 +345,7 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
           error.put("description", map.get("description"));
           sendEvent("Razorpay::VALIDATE_OPTIONS_ERROR", Utils.jsonToWritableMap(error));
         }catch (JSONException e){
-
+          emitErrorPayload("Razorpay::VALIDATE_OPTIONS_ERROR", e.getMessage());
         }
       }
     });
@@ -373,6 +410,18 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
       .emit(eventName, params);
   }
 
+  /** Emits a {"error": message} payload on eventName, so a waiting JS promise
+   *  settles instead of hanging forever when a native call can't proceed. */
+  private void emitErrorPayload(String eventName, String message) {
+    JSONObject payload = new JSONObject();
+    try {
+      payload.put("error", message != null ? message : "Unknown error");
+    } catch (JSONException e) {
+      // "error" is always a valid JSON key/string value; this can't happen.
+    }
+    sendEvent(eventName, Utils.jsonToWritableMap(payload));
+  }
+
 
     public void onPaymentSuccess(String razorpayPaymentId, JSONObject paymentData) {
       sendEvent("Razorpay::PAYMENT_SUCCESS", Utils.jsonToWritableMap(paymentData));
@@ -380,7 +429,6 @@ public class RazorpayCustomModule extends ReactContextBaseJavaModule implements 
 
 
     public void onPaymentError(int code, String description, JSONObject paymentDataJson) {
-      WritableMap errorParams = Arguments.createMap();
       try{
         paymentDataJson.put(MAP_KEY_ERROR_CODE, code);
         paymentDataJson.put(MAP_KEY_ERROR_DESC, description);
